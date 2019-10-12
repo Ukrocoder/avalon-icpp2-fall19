@@ -1,12 +1,48 @@
 #include <iostream>
 #include <random>
-#include <string>
 #include <cmath>
 #include "Main_Header.h"
 namespace lem
 {
 
 	//extern int G;
+	float median(Agent x)
+	{
+		int buffer;
+		bool flag = true;
+		float out;
+			while (flag)
+			{
+				flag = false;
+				for (int i = 0; i < 11; ++i)
+				{
+					if (x.monthlySales[i]> x.monthlySales[i+1])
+					{
+						buffer = x.monthlySales[i];
+						x.monthlySales[i] = x.monthlySales[i+1];
+						x.monthlySales[i+1] = buffer;
+						flag = true;
+					}
+				}
+			}
+			out = (x.monthlySales[5] + x.monthlySales[5]) / 2.0F;
+		return out;
+	}
+	Agent * make_agent(int na)
+	{
+		int j;
+		Agent * ptr = new Agent[na]{};
+		for (int i = 0; i < na; ++i)
+		{
+			j = GetRandomValue(0, 11);
+			for (j; j < 12; ++j)
+			{
+				(ptr + i)->monthlySales[j] = GetRandomValue(100, 1000);
+
+			}
+		}
+	return ptr;
+	}
 	Student* make_stud_list(int n)
 	{
 		int ln;
@@ -78,23 +114,68 @@ namespace lem
 		return false;
 	}
 	}
-	void bubble_sort(int* ptr, int size)
+	void bubble_sort(Student* ptr, int size, int choice)
 	{
-		int buffer;
+		Student buffer;
 		bool flag = true;
-		while (flag)
+		if (choice == 1)
 		{
-			flag = false;
-			for (int i = 0; i < size-1; ++i)
+			while (flag)
 			{
-				if (*(ptr + i) > * (ptr + i + 1))
+				flag = false;
+				for (int i = 0; i < size - 1; ++i)
 				{
-					buffer = *(ptr + i);
-					*(ptr + i) = *(ptr + i + 1);
-					*(ptr + i + 1) = buffer;
-					flag = true;
+					if ((ptr + i)->Id > (ptr + i + 1)->Id)
+					{
+						buffer = *(ptr + i);
+						*(ptr + i) = *(ptr + i + 1);
+						*(ptr + i + 1) = buffer;
+						flag = true;
+					}
 				}
 			}
+		}
+		if (choice == 2)
+		{
+			while (flag)
+			{
+				flag = false;
+				for (int i = 0; i < size - 1; ++i)
+				{
+					if ((ptr + i)->Grade > (ptr + i + 1)->Grade)
+					{
+						buffer = *(ptr + i);
+						*(ptr + i) = *(ptr + i + 1);
+						*(ptr + i + 1) = buffer;
+						flag = true;
+					}
+				}
+			}
+		}
+		if (choice == 3)
+		{
+			while (flag)
+			{
+				flag = false;
+				for (int i = 0; i < size - 1; ++i)
+				{
+					if ((ptr + i)->Name > (ptr + i + 1)->Name)
+					{
+						buffer = *(ptr + i);
+						*(ptr + i) = *(ptr + i + 1);
+						*(ptr + i + 1) = buffer;
+						flag = true;
+					}
+				}
+			}
+		}
+	}
+	void better_than(Student * ptr, int p)
+	{
+		if (p >= 0 && p <= 99)
+		{
+			std::cout << "You need to get " << (ptr + p)->Grade << " to be better than " << p << "% of students." << std::endl;
+
 		}
 	}
 	//(x / 1000000000000 + x%1000000000000/100000000000*3+x%100000000000/10000000000+x%10000000000/1000000000*3+x%1000000000/100000000+x%100000000/10000000*3+x%10000000/1000000+x%1000000/100000*3+x%100000/10000+x%10000/1000*3+x%1000/100+x%100/10*3+x%10)%10==0
