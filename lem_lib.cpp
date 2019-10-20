@@ -164,7 +164,7 @@ namespace lem
 	{
 
 		std::cout << data.day << ' ';
-		if (format = MonthAsInt) { std::cout << static_cast<int>(data.month) << ' '; }
+		if (format == MonthAsInt) { std::cout << static_cast<int>(data.month) << ' '; }
 		else {string_month(data.month); }
 		std::cout<< data.year;
 	}
