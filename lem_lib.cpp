@@ -57,7 +57,7 @@ namespace lem
 		int a = (14 - static_cast<int>(date.month)) / 12;
 		int y = date.year + 4800 - a;
 		int m = static_cast<int>(date.month) + (12 * a) - 3;
-		int out =  date.day + ((153 * m + 2) / 5) + 365 * y + (y / 4) - (y / 100) + (y / 400) - 32045;
+		out.delta =  date.day + ((153 * m + 2) / 5) + 365 * y + (y / 4) - (y / 100) + (y / 400) - 32045;
 		return out;
 	}
 	Date Gregor(TimeDelta x)
@@ -67,7 +67,7 @@ namespace lem
 		if (x.delta < 0) { x.delta *= 1; flag = true; }
 		int A, B, C, D, E;
 		if (x.delta < 2299161) { A = x.delta; }
-		else { A = static_cast<int>((A = x.delta + 1 + static_cast<int>((x.delta - 1867216.25) / 36524.25) - static_cast<int>(static_cast<int>((x.delta - 1867216.25) / 36524.25) / 4); }
+		else { A = static_cast<int>((A = x.delta + 1 + static_cast<int>((x.delta - 1867216.25) / 36524.25) - static_cast<int>(static_cast<int>((x.delta - 1867216.25) / 36524.25) / 4))); }
 		B = A + 1524;
 		C = static_cast<int>((B - 122.1F) / 365.25F);
 		D = static_cast<int>(365.25F * C);
@@ -85,6 +85,48 @@ namespace lem
 		TimeDelta out;
 		out.delta = countJND(to).delta - countJND(from).delta;
 		return out;
+	}
+	void string_month(Month m)
+	{
+		switch (m)
+		{
+		case Month::December:
+			std::cout << "December";
+			break;
+		case Month::January:
+			std::cout << "January";
+			break;
+		case Month::February:
+			std::cout << "February";
+			break;
+		case Month::March:
+			std::cout << "March";
+			break;
+		case Month::April:
+			std::cout << "April";
+			break;
+		case Month::May:
+			std::cout << "May";
+			break;
+		case Month::June:
+			std::cout << "June";
+			break;
+		case Month::July:
+			std::cout << "July";
+			break;
+		case Month::August:
+			std::cout << "August";
+			break;
+		case Month::September:
+			std::cout << "September";
+			break;
+		case Month::October:
+			std::cout << "October";
+			break;
+		case Month::Novemver:
+			std::cout << "Novemver";
+			break;
+		}
 	}
 	Season getSeason(Date date)
 	{
@@ -118,16 +160,20 @@ namespace lem
 		}
 	}
 	//====================================================================
-	void print(Date data, DateFormat format = DateFormat::MonthAsInt)
+	void print(Date data, DateFormat format)
 	{
-		std::cout <<data.day<<' '<< static_cast<int>(data.month) << data.year << std::endl;
+
+		std::cout << data.day << ' ';
+		if (format = MonthAsInt) { std::cout << static_cast<int>(data.month) << ' '; }
+		else {string_month(data.month); }
+		std::cout<< data.year;
 	}
 	//====================================================================
-	void print(Month month, DateFormat format = DateFormat::MonthAsInt)
+	void print(Month month, DateFormat format)
 	{
 		std::cout << static_cast<int>(month)<< std::endl;
-	//====================================================================
 	}
+	//====================================================================
 	void print(TimeDelta delta)
 	{
 	std::cout << delta.delta << std::endl;
