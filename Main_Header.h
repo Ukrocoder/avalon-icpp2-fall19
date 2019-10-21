@@ -103,4 +103,6 @@ namespace lem
 		TimeDelta operator / (int multiplier, const TimeDelta delta);
 		//My functions
 		bool correct_date(Date x);
+		Date* make_mass(int x);
+		void bubble_sort(TimeDelta* ptr, int size);
 }

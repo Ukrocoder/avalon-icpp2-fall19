@@ -4,6 +4,25 @@
 #include <exception>
 namespace lem
 {
+void bubble_sort(TimeDelta* ptr, int size)
+{
+	int buffer;
+	bool flag = true;
+	while (flag)
+	{
+		flag = false;
+		for (int i = 0; i < size - 1; ++i)
+		{
+			if ((ptr + i)->delta <  (ptr + i + 1)->delta)
+			{
+				buffer = (ptr + i)->delta;
+				(ptr + i)->delta = (ptr + i + 1)->delta;
+				(ptr + i + 1)->delta = buffer;
+				flag = true;
+			}
+		}
+	}
+}
 	int GetRandomValue(int min, int max, bool isDebugMode=false)//Stolen from Extention.h
 	{
 		static auto randomEngine = [isDebugMode]() { return isDebugMode ? std::mt19937{} : std::mt19937(std::random_device{}()); }();

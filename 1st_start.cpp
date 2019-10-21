@@ -2,6 +2,7 @@
 #include "Main_Header.h"
 //#include "Main_Header.h"
 //int const G = 10;
+int n = 100;
 
 int main()
 {
@@ -24,5 +25,11 @@ int main()
 				flag = true;
 			}
 	}
-	make
+	lem::Date *p = lem::make_mass(n);
+	lem::TimeDelta *ip = new lem::TimeDelta[n];
+	for (int i = 0; i < n; ++i)
+	{
+		*(ip + i) = lem::countJND(*(p + i));
+	}
+	lem::bubble_sort(ip, n);
 }
