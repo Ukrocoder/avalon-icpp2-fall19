@@ -42,7 +42,7 @@ namespace ext
 	}
 
 	//Append the char in the end of array and renames pointer to the new char array.
-	void append(char_array &s, char input)
+	 void append(char_array &s, char input)
 	{
 		char_array out = new char[len(s) + 2];
 		for (int i = 0; i < len(s); ++i)
@@ -51,18 +51,19 @@ namespace ext
 		}
 		out[len(s)] = input;
 		out[len(s)+1] = '\0';
-		delete[] s;
+		//delete[] s;
 		s = out;
 	}
 
 	//Return new array which contains first "length" symbols from "start"(counting from 1).
 	char_array substring(char_array s, int start, int length)
 	{
-		char_array out = new char[length];
+		char_array out = new char[length+1];
 		for (int i = start - 1; i < start + length; ++i)
 		{
-			out[i] = s[i];
+			out[i-(start-1)] = s[i];
 		}
+		out[length] = '\0';
 		return out;
 	}
 }
