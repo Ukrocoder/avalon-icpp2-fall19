@@ -1,14 +1,10 @@
-#include <iostream>
-#include <random>
-#include <math.h>
-#include <exception>
-#include <sstream>
 #include "Main_Header.h"
+#include <math.h>
+#include <iostream>
 #include <fstream>
-extern std::ifstream input;
-extern std::ofstream output;
-extern std::fstream in_output;
-
+std::ifstream input;
+std::ofstream output;
+std::fstream in_output;
 namespace lem
 {
 	/*int GetRandomValue(int min, int max, bool isDebugMode = false)//Stolen from Extention.h
@@ -40,10 +36,10 @@ namespace lem
 		std::ofstream output_2;
 		input.open("tickets.txt");
 		output.open("lucky.txt", std::istream::app);
-		output_2.open("unlucky.txt", std::istream::app );
+		output_2.open("unlucky.txt", std::istream::app);
 		for (int i = 0; i < 1000; ++i)
 		{
-			input>>ticket;
+			input >> ticket;
 			if (digit(ticket, 6) + digit(ticket, 5) + digit(ticket, 4) == digit(ticket, 3) + digit(ticket, 2) + digit(ticket, 1))
 			{
 				output << ticket << std::endl;
@@ -54,14 +50,11 @@ namespace lem
 			}
 		}
 		input.close(); output.close(); output_2.close();
-		}
+	}
+
+
 	std::ifstream& operator >>(std::ifstream& input, triangle& x)
 	{
-		std::string line;
-		std::getline(input, line);
-
-		std::istringstream temp(line);
-
 		input >> x.color >> x.a >> x.b >> x.c >> x.width >> x.fill;
 		input.clear('\n');
 		return input;
@@ -76,18 +69,51 @@ namespace lem
 	void task_2()
 	{
 		triangle x;
-		triangle y;
 		input.open("triangle.txt");
 		output.open("triangle_out.txt");
 
-		input >> x;
-		input >> y;
 		for (int i = 0; i < 100; ++i)
 		{
-		input >> x;
-		output << x;
+			input >> x;
+			output << x;
 		}
 		input.close();
 		output.close();
 	}
+	
+	void task_3()
+	{
+		int id, maxid = 0;
+		float buf;
+		float max = 0.0;
+		athlete * mass = new athlete[20];
+		input.open("athletes.txt");
+
+
+		for (int i = 0; i < 20; ++i)
+		{
+			input >> buf;
+			input >> mass[i].name;
+			input >> mass[i].surname;
+		}
+		input.close();
+		input.open("result.txt");
+		for (int i = 0; i < 60; ++i)
+		{
+			input >> id >> buf;
+			if (mass[id - 1].res_1 == 0) { mass[id - 1].res_1 = buf; }
+			else
+			{
+				if (mass[id - 1].res_2 == 0) { mass[id - 1].res_2 = buf; }
+				else { mass[id - 1].res_3 = buf; }
+			}
+			if (max < mass[id - 1].res_1) { max = mass[id - 1].res_1; maxid = id - 1; }
+			if (max < mass[id - 1].res_2) { max = mass[id - 1].res_2; maxid = id - 1; }
+			if (max < mass[id - 1].res_3) { max = mass[id - 1].res_3; maxid = id - 1; }
+
+		}
+		std::cout << mass[maxid].name << ' ' << mass[maxid].surname << ": " << max;
+		input.close();
+	}
+
 }
