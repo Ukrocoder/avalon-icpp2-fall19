@@ -7,6 +7,7 @@ int main()
 
 	while (flag)
 	{
+	//	book::creat();
 		std::cout << "Choose action:\n1 - find book by its name.\n2 - add new book.\n3 - change existing book.\n4 - show list of books sorted by its author and name.\n5 - show statistics about summary price and quantity of books.\n0 - exit the programm."<<std::endl;
 		std::cin >> input;
 		switch (input)

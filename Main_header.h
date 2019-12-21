@@ -11,6 +11,8 @@ namespace book
 		int quantity;
 	};
 
+	void creat();
+
 	void find();
 	
 	void add();

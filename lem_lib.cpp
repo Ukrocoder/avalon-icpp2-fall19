@@ -1,6 +1,6 @@
 #include "Main_header.h"
 #include <string>
-#include<fstream>
+#include <fstream>
 #include <iostream>
 
 namespace book
@@ -11,10 +11,32 @@ namespace book
 	extern const int SIZE;
 	std::ostream& operator << (std::ostream& out, Book book)
 	{
-		out <<"Id: "<< book.id <<", book name: " << book.title << ", author: " << book.author << ", price: " << book.price << ", quantity" << book.quantity;
+		out <<"Id: "<< book.id <<", book name: " << book.title << ", author: " << book.author << ", price: " << book.price << ", quantity " << book.quantity;
 		return out;
 	}
-
+	void equal(char* reciever, const char* giver)
+	{
+		int i = 0;
+		//std::cout << x[i];
+		while (giver[i] != '\0')
+		{
+			reciever[i] = giver[i];
+			++i;
+		}
+		reciever[i] = '\0';
+	}
+/*	void creat()
+	{
+		int id=0;
+		Book buf{1, "Author", "Title", 150.0, 5};
+		char str[20]{"yay"};
+		equal(buf.title, str);
+		//char * p = new char[20]{"Author 1"};
+		out_file.open("source.bin", std::istream::out | std::istream::binary);
+		out_file.seekp(sizeof(Book)*id);
+		out_file.write(reinterpret_cast<char*>(&buf), sizeof(Book));
+		out_file.close();
+	}*/
 
 	int len(char* s)
 	{
@@ -61,6 +83,7 @@ namespace book
 				if (concatenate(mass[i].author, mass[i].title) > concatenate(mass[i].author, mass[i].title))
 				{
 					swap(mass[i], mass[i + 1]);
+					flag = true;
 				}
 			}
 			++x;
@@ -71,11 +94,14 @@ namespace book
 		int file_size;
 		char name[SIZE]{};
 		bool flag = true;
+
 		std::cout << "Enter book's title." << std::endl;
 		std::cin >> name;
+
 		in_file.open("source.bin", std::istream::in | std::istream::binary);
 		in_file.seekg(0, std::istream::end);
 		file_size = (in_file.tellg()/sizeof(Book));
+
 		for (int i = 0; i < file_size; ++i)
 		{
 			in_file.read(reinterpret_cast<char*>(&buf), sizeof(Book));
@@ -85,7 +111,9 @@ namespace book
 				flag = false;
 			}
 		}
+		
 		in_file.close();
+
 		if (flag)
 		{
 			std::cout << "No book with such name." << std::endl;
@@ -97,12 +125,15 @@ namespace book
 		//char title[20], char author[20], float price, int quantity
 		std::cout<<"Enter book's title, author, price and then quantity (only in that order)." << std::endl;
 		std::cin >> buf.title >> buf.author >> buf.price >> buf.quantity;
+
 		in_file.open("source.bin", std::istream::in | std::istream::binary);
 		in_file.seekg(0, std::istream::end);
 		size = (in_file.tellg() / sizeof(Book));
 		in_file.close();
 		buf.id = size + 1;
+
 		out_file.open("source.bin", std::istream::out | std::istream::binary);
+		out_file.seekp(0, std::istream::end);
 		out_file.write(reinterpret_cast<char*>(&buf), sizeof(Book));
 		out_file.close();
 	}
@@ -118,6 +149,7 @@ namespace book
 		in_file.read(reinterpret_cast<char*>(&buf), sizeof(Book));
 		std::cout << buf << std::endl;
 		in_file.close();
+
 		std::cout << "Now enter book's news title, author, price and then quantity (only in that order)." << std::endl;
 		std::cin>> buf.title >> buf.author >> buf.price >> buf.quantity;
 		out_file.open("source.bin", std::istream::out | std::istream::binary);
@@ -132,26 +164,32 @@ namespace book
 		in_file.seekg(0, std::istream::end);
 		file_size = (in_file.tellg() / sizeof(Book));
 		Book* mass = new Book[file_size];
+
 		for (int i = 0; i < file_size; ++i)
 		{
 			in_file.read(reinterpret_cast<char*>(mass+i), sizeof(Book));
 		}
 		in_file.close();
+
 		bubble_sort(mass, file_size);
 
 		for (int i = 0; i < file_size; ++i)
 		{
 			std::cout << mass[i] << std::endl;
 		}
+
+		delete[] mass;
 	}
 	void show_stat()
 	{
 		int file_size;
 		int sum_price=0;
 		int sum_quantity=0;
+
 		in_file.open("source.bin", std::istream::in | std::istream::binary);
 		in_file.seekg(0, std::istream::end);
 		file_size = (in_file.tellg() / sizeof(Book));
+
 		for (int i = 0; i < file_size; ++i)
 		{
 			in_file.read(reinterpret_cast<char*>(&buf), sizeof(Book));
@@ -159,6 +197,7 @@ namespace book
 			sum_quantity += buf.quantity;
 		}
 		in_file.close();
+
 		std::cout << "Summary price of books: " << sum_price << ", summary quantity: " << sum_quantity << std::endl;
 	}
 }
