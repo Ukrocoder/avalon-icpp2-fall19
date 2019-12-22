@@ -9,42 +9,35 @@ namespace book
 	std::ofstream out_file;
 	Book buf;
 	extern const int SIZE;
+	/*====================================================================*/
 	std::ostream& operator << (std::ostream& out, Book book)
 	{
-		out <<"Id: "<< book.id <<", book name: " << book.title << ", author: " << book.author << ", price: " << book.price << ", quantity " << book.quantity;
+		out <<"Id: "<< book.id << ", author: " << book.author << ", book name: " << book.title << ", price: " << book.price << ", quantity " << book.quantity;
 		return out;
 	}
-	void equal(char* reciever, const char* giver)
+	/*====================================================================*/
+	Book* read( int &file_size)
 	{
-		int i = 0;
-		//std::cout << x[i];
-		while (giver[i] != '\0')
+		in_file.open("source.bin", std::istream::in | std::istream::binary);
+		in_file.seekg(0, std::istream::end);
+		file_size = (in_file.tellg() / sizeof(Book));
+		Book* mass = new Book[file_size];
+		in_file.seekg(0);
+		for (int i = 0; i < file_size; ++i)
 		{
-			reciever[i] = giver[i];
-			++i;
+			in_file.read(reinterpret_cast<char*>(mass + i), sizeof(Book));
 		}
-		reciever[i] = '\0';
+		in_file.close();
+		return mass;
 	}
-/*	void creat()
-	{
-		int id=0;
-		Book buf{1, "Author", "Title", 150.0, 5};
-		char str[20]{"yay"};
-		equal(buf.title, str);
-		//char * p = new char[20]{"Author 1"};
-		out_file.open("source.bin", std::istream::out | std::istream::binary);
-		out_file.seekp(sizeof(Book)*id);
-		out_file.write(reinterpret_cast<char*>(&buf), sizeof(Book));
-		out_file.close();
-	}*/
-
+	/*====================================================================*/
 	int len(char* s)
 	{
 		int out = 0;
 		while (s[out] != '\0') { ++out; }
 		return out;
 	}
-
+	/*====================================================================*/
 	void swap(Book& b1, Book& b2)
 	{
 		Book buf;
@@ -52,7 +45,7 @@ namespace book
 		b2 = b1;
 		b1 = buf;
 	}
-
+	/*====================================================================*/
 	char* concatenate(char* first, char* second)
 	{
 		char* out = new char[len(first) + len(second) - 1];
@@ -70,7 +63,7 @@ namespace book
 		out[len(first) + len(second)] = '\0';
 		return out;
 	}
-
+	/*====================================================================*/
 	void bubble_sort(Book * mass, int size)
 	{
 		int x=0;
@@ -80,7 +73,8 @@ namespace book
 			flag = false;
 			for (int i = 0; i < size-1-x; ++i)
 			{
-				if (concatenate(mass[i].author, mass[i].title) > concatenate(mass[i].author, mass[i].title))
+				
+				if (strcmp(concatenate(mass[i].author, mass[i].title), concatenate(mass[i+1].author, mass[i+1].title))>0 )
 				{
 					swap(mass[i], mass[i + 1]);
 					flag = true;
@@ -89,6 +83,7 @@ namespace book
 			++x;
 		}
 	}
+	/*====================================================================*/
 	void find()
 	{
 		int file_size;
@@ -105,13 +100,13 @@ namespace book
 		for (int i = 0; i < file_size; ++i)
 		{
 			in_file.read(reinterpret_cast<char*>(&buf), sizeof(Book));
-			if (buf.title == name)
+			if (strcmp(buf.title, name)==0)
 			{
 				std::cout << buf<<std::endl;
 				flag = false;
+				break;
 			}
-		}
-		
+		}	
 		in_file.close();
 
 		if (flag)
@@ -119,10 +114,10 @@ namespace book
 			std::cout << "No book with such name." << std::endl;
 		}
 	}
+	/*====================================================================*/
 	void add()
 	{
 		int size;
-		//char title[20], char author[20], float price, int quantity
 		std::cout<<"Enter book's title, author, price and then quantity (only in that order)." << std::endl;
 		std::cin >> buf.title >> buf.author >> buf.price >> buf.quantity;
 
@@ -132,54 +127,43 @@ namespace book
 		in_file.close();
 		buf.id = size + 1;
 
-		out_file.open("source.bin", std::istream::out | std::istream::binary);
-		out_file.seekp(0, std::istream::end);
+		out_file.open("source.bin", std::istream::out |std::istream::app | std::istream::binary);
 		out_file.write(reinterpret_cast<char*>(&buf), sizeof(Book));
 		out_file.close();
 	}
+	/*====================================================================*/
 	void redact()
 	{
-		int id;
-
+		int id, file_size;
 		std::cout << "Enter the id of book which you want to change."<<std::endl;
 		std::cin >> id;
-		buf.id = id;
-		in_file.open("source.bin", std::istream::in | std::istream::binary);
-		in_file.seekg(id * sizeof(Book));
-		in_file.read(reinterpret_cast<char*>(&buf), sizeof(Book));
-		std::cout << buf << std::endl;
-		in_file.close();
+		--id;
 
+		Book* mass = read(file_size);
+		std::cout << mass[id]<<std::endl;
 		std::cout << "Now enter book's news title, author, price and then quantity (only in that order)." << std::endl;
-		std::cin>> buf.title >> buf.author >> buf.price >> buf.quantity;
+		std::cin >> mass[id].title >> mass[id].author >> mass[id].price >> mass[id].quantity;
 		out_file.open("source.bin", std::istream::out | std::istream::binary);
-		out_file.seekp(sizeof(Book)*id);
-		out_file.write(reinterpret_cast<char*>(&buf), sizeof(Book));
+		out_file.write(reinterpret_cast<char*>(mass), sizeof(Book)*file_size);
+		
 		out_file.close();
+		delete[] mass;
 	}
+	/*====================================================================*/
 	void show_list()
 	{
 		int file_size;
-		in_file.open("source.bin", std::istream::in | std::istream::binary);
-		in_file.seekg(0, std::istream::end);
-		file_size = (in_file.tellg() / sizeof(Book));
-		Book* mass = new Book[file_size];
 
-		for (int i = 0; i < file_size; ++i)
-		{
-			in_file.read(reinterpret_cast<char*>(mass+i), sizeof(Book));
-		}
-		in_file.close();
-
+		Book* mass = read(file_size);
 		bubble_sort(mass, file_size);
 
 		for (int i = 0; i < file_size; ++i)
 		{
 			std::cout << mass[i] << std::endl;
 		}
-
 		delete[] mass;
 	}
+	/*====================================================================*/
 	void show_stat()
 	{
 		int file_size;
@@ -189,6 +173,7 @@ namespace book
 		in_file.open("source.bin", std::istream::in | std::istream::binary);
 		in_file.seekg(0, std::istream::end);
 		file_size = (in_file.tellg() / sizeof(Book));
+		in_file.seekg(0);
 
 		for (int i = 0; i < file_size; ++i)
 		{

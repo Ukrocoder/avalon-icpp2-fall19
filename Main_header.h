@@ -2,6 +2,7 @@
 namespace book
 {
 	const int SIZE = 20;
+
 	struct Book
 	{
 		int id;
@@ -11,7 +12,7 @@ namespace book
 		int quantity;
 	};
 
-	void creat();
+	//void creat();
 
 	void find();
 	
